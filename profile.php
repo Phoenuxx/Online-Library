@@ -25,7 +25,7 @@
                     <h1 class="">Book</h2>
                 </div>
                 <div class="col profile-name">
-                    <h1>Check Out Time</h2>
+                    <h1>Check Out Date</h2>
                 </div>
                 <div class="col profile-name">
                     <h1>Due Date</h2>

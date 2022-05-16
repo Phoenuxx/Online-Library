@@ -10,7 +10,7 @@ if($username == "Admin") header("Location: admin.php");
 
 fetchLibrary($conn, $_SESSION['ID']);
 
-if(isset($_POST['return-book'])) {
-    echo test;
-    //returnBook($conn, $_SESSION['ID']);
-}
+if(isset($_GET['return-book'])) {
+    returnBook($conn, $_GET['return-book']);
+    header("Location: ../profile.php?return=success");
+};

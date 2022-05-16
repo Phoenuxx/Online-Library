@@ -1,4 +1,5 @@
 <?php
+
 //Sign up functions
 function emptySignup($username, $email, $password, $password2) {
     $result;
@@ -137,7 +138,9 @@ function fetchLibrary($conn, $id) {
 function populateProfileLibrary($userLibrary) {
 	//echo json_encode($userLibrary);
 	foreach($userLibrary as $book => $book_value) {
-	 echo  '<div class="row shelf">
+		$_SESSION['bookid'] = $book_value['id'];
+		echo $_SESSION['bookid'];
+	 	echo  '<div class="row shelf">
 	 			<div class="col ">
 					<div>Title: '.json_encode($book_value['title']).'<br>Author: '.json_encode($book_value['author']).'<br>Genre: '.json_encode($book_value['genre1']).'</div>
 				</div>
@@ -148,8 +151,8 @@ function populateProfileLibrary($userLibrary) {
 				'.json_encode($book_value['dueDate']).'
 				</div> 
 				<div class="col ">
-				<form action="scripts/profileScript.php" method="POST">
-				<button class="btn btn-warning return-button" type="submit name="return-book">Click to Return Book</button>
+				<form action="profile.php" method="GET">
+				<button class="btn btn-warning return-button" type="submit" name="return-book" value="'.$_SESSION["bookid"].'">Click to Return Book</button>
 				</form>
 				</div> 
 			</div>';
@@ -157,11 +160,12 @@ function populateProfileLibrary($userLibrary) {
 }
 
 function returnBook($conn, $id) {
-	$sql = "UPDATE books SET checkOut=NULL AND dueDate=NULL AND FK_readerID=NULL WHERE FK_readerID=?";
+	echo 'test';
+	$sql = "UPDATE books SET checkOut=NULL, dueDate=NULL, FK_readerID=NULL WHERE id=?";
 	$stmt = mysqli_stmt_init($conn);
 	
 	if(!mysqli_stmt_prepare($stmt, $sql)) {
-		header("Location: ../signup.php?error=libraryreturnerror");
+		header("Location: ../profile.php?error=libraryreturnerror");
 		exit();
 	};
 		mysqli_stmt_bind_param($stmt, "i", $id);
