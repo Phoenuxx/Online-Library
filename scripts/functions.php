@@ -4,8 +4,7 @@
 function emptySignup($username, $email, $password, $password2) {
     $result;
     if(empty($username)  || empty($email)  || empty($password) || empty($password2)) {
-        header("Location: ../signup.php?error=emptyfield&userID=".$username."&mail=".$email);
-        $result = true;
+		$result = true;
     } else {
         $result = false;
     }
@@ -139,16 +138,17 @@ function populateProfileLibrary($userLibrary) {
 	//echo json_encode($userLibrary);
 	foreach($userLibrary as $book => $book_value) {
 		$_SESSION['bookid'] = $book_value['id'];
-		echo $_SESSION['bookid'];
+
+		// trim(json_encode($variable), removes " from string) trims the " character from the json styled strings
 	 	echo  '<div class="row shelf">
 	 			<div class="col ">
-					<div>Title: '.json_encode($book_value['title']).'<br>Author: '.json_encode($book_value['author']).'<br>Genre: '.json_encode($book_value['genre1']).'</div>
+					<div>Title: '.trim(json_encode($book_value['title']),'"').'<br>Author: '.trim(json_encode($book_value['author']),'"').'<br>Genre: '.trim(json_encode($book_value['genre1']),'"').'</div>
 				</div>
 				<div class="col ">
-				'.json_encode($book_value['checkOut']).'
+				'.trim(json_encode($book_value['checkOut']),'"').'
 				</div> 
 				<div class="col ">
-				'.json_encode($book_value['dueDate']).'
+				'.trim(json_encode($book_value['dueDate']),'"').'
 				</div> 
 				<div class="col ">
 				<form action="profile.php" method="GET">
@@ -170,7 +170,52 @@ function returnBook($conn, $id) {
 	};
 		mysqli_stmt_bind_param($stmt, "i", $id);
 		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		
+//	$result = mysqli_stmt_get_result($stmt);
+//	header("Location: ../profile.php?return=success"); //TODO THROWING ERROR
+};
 
-	$result = mysqli_stmt_get_result($stmt);
-	header("Location: ../profile.php?return=success");
+
+// admin page functions
+
+function countBooks($conn) {
+	echo 'test';
+	$sql = "SELECT COUNT(*) FROM books";
+	$stmt = mysqli_stmt_init($conn);
+	
+	if(!mysqli_stmt_prepare($stmt, $sql)) {
+		header("Location: ../profile.php?error=libraryreturnerror");
+		exit();
+	};
+		mysqli_stmt_bind_param($stmt, "i", $id);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		echo $stmt;
+};
+
+function emptyBook($title, $author, $genre, $pages) {
+    $result;
+    if(empty($title)  || empty($author)  || empty($genre) || empty($pages)) {
+		$result = true;
+    } else {
+        $result = false;
+    }
+	return $result;
+}
+
+function addNewBook($conn, $title, $author, $genre, $genre2, $pages) {
+    $currentDateTime = date("'Y-m-d G:i:s'");
+	echo $currentDateTime;
+	$sql = "INSERT INTO books (title, author, genre1, genre2, pages, date_added) VALUES(?, ?, ?, ?, ?, $currentDateTime)";
+	$stmt = mysqli_stmt_init($conn);
+
+	if(!mysqli_stmt_prepare($stmt, $sql)) {
+		header("Location: ../admin.php?addbook=sqlerror");
+		exit();
+	}
+		mysqli_stmt_bind_param($stmt, "ssssi", $title, $author, $genre, $genre2, $pages);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		header("Location: ../admin.php?addbook=success.$currentDateTime");
 };

@@ -7,7 +7,7 @@
         <div class="container">
             <div class="row profile-name">
                 <?php 
-                    echo "<h1 >".ucfirst($_SESSION['userName'])."</h1>";
+                    echo "<h1 >".ucwords($_SESSION['userName'])."</h1>";
                 ?>
             </div>
             
@@ -36,6 +36,13 @@
             </div>
             <div class="row">
                 <?php require "scripts/profileScript.php";?>
+            </div>
+            <div class="row">
+            <?php
+            if(isset($_GET['return-book'])) {
+                echo '<p>Book successfully returned</p>';
+            } 
+            ?>
             </div>
         </div>
     

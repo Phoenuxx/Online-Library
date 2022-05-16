@@ -8,9 +8,9 @@ if(isset($_POST['signup-submit'])) {
     $email = $_POST['userEmail'];
     $password = $_POST['pwd'];
     $password2 = $_POST['pwd2'];
-    $checkedForAvailability = false;
+    
 
-    //error catching to ensure 'proper' info input by user
+   //error catching to ensure 'proper' info input by user
     if (emptySignup($username, $email, $password, $password2) !== false) {
         header("Location: ../signup.php?error=emptyfield");
         exit();
