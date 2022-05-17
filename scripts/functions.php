@@ -188,10 +188,9 @@ function countBooks($conn) {
 		header("Location: ../profile.php?error=libraryreturnerror");
 		exit();
 	};
-		mysqli_stmt_bind_param($stmt, "i", $id);
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
-		echo $stmt;
+		
 };
 
 function emptyBook($title, $author, $genre, $pages) {
@@ -218,4 +217,19 @@ function addNewBook($conn, $title, $author, $genre, $genre2, $pages) {
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		header("Location: ../admin.php?addbook=success.$currentDateTime");
+};
+
+function removeBook($conn, $title) {
+	
+	$sql = "DELETE FROM books WHERE title=?";
+	$stmt = mysqli_stmt_init($conn);
+	
+	if(!mysqli_stmt_prepare($stmt, $sql)) {
+		header("Location: ../admin.php?removebook=sqlerror");
+		exit();
+	}
+		mysqli_stmt_bind_param($stmt, "s", $title);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+		header("Location: ../admin.php?removebook=success");
 };
