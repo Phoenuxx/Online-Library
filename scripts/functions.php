@@ -137,8 +137,6 @@ function fetchLibrary($conn, $id) {
 function populateProfileLibrary($userLibrary) {
 	//echo json_encode($userLibrary);
 	foreach($userLibrary as $book => $book_value) {
-		$_SESSION['bookid'] = $book_value['id'];
-
 		// trim(json_encode($variable), removes " from string) trims the " character from the json styled strings
 	 	echo  '<div class="row shelf">
 	 			<div class="col ">
@@ -151,8 +149,8 @@ function populateProfileLibrary($userLibrary) {
 				'.trim(json_encode($book_value['dueDate']),'"').'
 				</div> 
 				<div class="col ">
-				<form action="profile.php" method="GET">
-				<button class="btn btn-warning return-button" type="submit" name="return-book" value="'.$_SESSION["bookid"].'">Click to Return Book</button>
+				<form action="scripts/profileScript.php" method="GET">
+				<button class="btn btn-warning return-button" type="submit" name="return-book" value="'.$book_value['id'].'">Click to Return Book</button>
 				</form>
 				</div> 
 			</div>';
@@ -160,7 +158,6 @@ function populateProfileLibrary($userLibrary) {
 }
 
 function returnBook($conn, $id) {
-	echo 'test';
 	$sql = "UPDATE books SET checkOut=NULL, dueDate=NULL, FK_readerID=NULL WHERE id=?";
 	$stmt = mysqli_stmt_init($conn);
 	
@@ -172,8 +169,6 @@ function returnBook($conn, $id) {
 		mysqli_stmt_execute($stmt);
 		mysqli_stmt_close($stmt);
 		
-//	$result = mysqli_stmt_get_result($stmt);
-//	header("Location: ../profile.php?return=success"); //TODO THROWING ERROR
 };
 
 
@@ -238,24 +233,47 @@ function removeBook($conn, $title) {
 function populateMainLibrary($mainLibrary) {
 	//echo json_encode($userLibrary);
 	foreach($mainLibrary as $book => $book_value) {
-		$_SESSION['bookid'] = $book_value['id'];
-
-		// trim(json_encode($variable), removes " from string) trims the " character from the json styled strings
-	 	echo  '<div class="row shelf">
-	 			<div class="col ">
-					<div>Title: '.trim(json_encode($book_value['title']),'"').'<br>Author: '.trim(json_encode($book_value['author']),'"').'<br>Genre: '.trim(json_encode($book_value['genre1']),'"').'</div>
-				</div>
-				<div class="col ">
-				'.trim(json_encode($book_value['genre1']),'"').'
-				</div> 
-				<div class="col ">
-				'.trim(json_encode($book_value['pages']),'"').'
-				</div> 
-				<div class="col ">
-				<form action="profile.php" method="GET">
-				<button class="btn btn-success return-button" type="submit" name="return-book" value="'.$_SESSION["bookid"].'">Click to Checkout Book</button>
+		// trim(json_encode($variable,")  trims the " character from the json styled strings
+	 	echo  '	<div class="col-9 ">
+					<div class="row shelf">
+						<div class="col-4">
+							<div>Title: '.trim(json_encode($book_value['title']),'"').'<br>Author: '.trim(json_encode($book_value['author']),'"').'<br>Genre: '.trim(json_encode($book_value['genre1']),'"').'</div>
+						</div>
+						<div class="col-4">'
+							.trim(json_encode($book_value['genre1']),'"').
+						'</div> 
+						<div class="col-4">'
+							.trim(json_encode($book_value['pages']),'"').
+						'</div>
+						
+					</div>
+				</div>'
+				;
+		echo (isset($_SESSION['userName'])) ?  
+			'<div class="col-3 ">
+				<form action="scripts/libraryScript.php" method="GET">
+					<button class="btn btn-success return-button" type="submit" name="checkout-book" value="'.$book_value['id'].'">Click to Checkout Book</button>
 				</form>
-				</div> 
-			</div>';
+			</div>' : 
+			'<button class="btn btn-success return-button" type="submit" name="checkout-book" disabled>Click to Checkout Book</button>'; 
+				
+						
  	};
-}
+};
+
+//TODO stop checkout button from redirecting to libraryscripts.php
+				
+function checkoutBook($conn, $id, $bookID) {
+	$currentDate = date("'Y-m-d'");
+	$returnDate = date("'Y-m-d'", strtotime('+14 days'));
+	$sql = "UPDATE books SET checkOut=$currentDate, dueDate=$returnDate, FK_readerID=? WHERE id=?";
+	$stmt = mysqli_stmt_init($conn);
+	
+	if(!mysqli_stmt_prepare($stmt, $sql)) {
+		header("Location: ../profile.php?error=librarycheckouterror");
+		exit();
+	};
+		mysqli_stmt_bind_param($stmt, "ii", $id, $bookID);
+		mysqli_stmt_execute($stmt);
+		mysqli_stmt_close($stmt);
+};

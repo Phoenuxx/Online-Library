@@ -12,4 +12,5 @@ fetchLibrary($conn, $_SESSION['ID']);
 
 if(isset($_GET['return-book'])) {
     returnBook($conn, $_GET['return-book']);
+    header("Location: ../profile.php?return=success");
 };

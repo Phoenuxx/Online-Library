@@ -32,7 +32,7 @@
                     <h1>Return Book</h1>
                 </div>
             </div>
-            <div class="row">
+            <div class="row" id="message-row">
                 <?php require "scripts/profileScript.php";?>
             </div>
             <div class="row">

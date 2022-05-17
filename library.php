@@ -2,6 +2,7 @@
     require "header.php";
     require_once 'scripts/dbHandlerScript.php';
     require_once 'scripts/functions.php';
+    require_once 'scripts/libraryScript.php';
     function loadLibrary($conn) {
 
         $sql = "SELECT * FROM books WHERE FK_readerID iS NULL";
@@ -19,7 +20,6 @@
         $mainLibrary = mysqli_fetch_all ($result, MYSQLI_ASSOC);
         populateMainLibrary($mainLibrary);
     };
-    
 ?>
 
     <main> 
@@ -33,7 +33,7 @@
                 <div class="col profile-name"> <h1 class="profile-name">Page Count</h1></div>
                 <div class="col profile-name"> <h1 class="profile-name">Check out</h1></div>
             </div>
-            <div class="row">
+            <div class="row library">
                 <?php loadLibrary($conn); ?>
             </div>
         </div>
