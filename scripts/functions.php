@@ -179,19 +179,19 @@ function returnBook($conn, $id) {
 
 // admin page functions
 
-function countBooks($conn) {
-	echo 'test';
-	$sql = "SELECT COUNT(*) FROM books";
-	$stmt = mysqli_stmt_init($conn);
+// function countBooks($conn) {
+// 	echo 'test';
+// 	$sql = "SELECT COUNT(*) FROM books";
+// 	$stmt = mysqli_stmt_init($conn);
 	
-	if(!mysqli_stmt_prepare($stmt, $sql)) {
-		header("Location: ../profile.php?error=libraryreturnerror");
-		exit();
-	};
-		mysqli_stmt_execute($stmt);
-		mysqli_stmt_close($stmt);
+// 	if(!mysqli_stmt_prepare($stmt, $sql)) {
+// 		header("Location: ../profile.php?error=libraryreturnerror");
+// 		exit();
+// 	};
+// 		mysqli_stmt_execute($stmt);
+// 		mysqli_stmt_close($stmt);
 		
-};
+// };
 
 function emptyBook($title, $author, $genre, $pages) {
     $result;
@@ -205,7 +205,6 @@ function emptyBook($title, $author, $genre, $pages) {
 
 function addNewBook($conn, $title, $author, $genre, $genre2, $pages) {
     $currentDateTime = date("'Y-m-d G:i:s'");
-	echo $currentDateTime;
 	$sql = "INSERT INTO books (title, author, genre1, genre2, pages, date_added) VALUES(?, ?, ?, ?, ?, $currentDateTime)";
 	$stmt = mysqli_stmt_init($conn);
 
@@ -233,3 +232,30 @@ function removeBook($conn, $title) {
 		mysqli_stmt_close($stmt);
 		header("Location: ../admin.php?removebook=success");
 };
+
+//Library page
+
+function populateMainLibrary($mainLibrary) {
+	//echo json_encode($userLibrary);
+	foreach($mainLibrary as $book => $book_value) {
+		$_SESSION['bookid'] = $book_value['id'];
+
+		// trim(json_encode($variable), removes " from string) trims the " character from the json styled strings
+	 	echo  '<div class="row shelf">
+	 			<div class="col ">
+					<div>Title: '.trim(json_encode($book_value['title']),'"').'<br>Author: '.trim(json_encode($book_value['author']),'"').'<br>Genre: '.trim(json_encode($book_value['genre1']),'"').'</div>
+				</div>
+				<div class="col ">
+				'.trim(json_encode($book_value['genre1']),'"').'
+				</div> 
+				<div class="col ">
+				'.trim(json_encode($book_value['pages']),'"').'
+				</div> 
+				<div class="col ">
+				<form action="profile.php" method="GET">
+				<button class="btn btn-success return-button" type="submit" name="return-book" value="'.$_SESSION["bookid"].'">Click to Checkout Book</button>
+				</form>
+				</div> 
+			</div>';
+ 	};
+}

@@ -1,4 +1,22 @@
-<?php require "header.php"; ?>
+<?php 
+    require_once "header.php";
+    require_once 'scripts/functions.php';
+    REQUIRE_ONCE 'scripts/dbHandlerScript.php';
+    function countBooks($conn) {
+
+        $sql = "SELECT COUNT(*) FROM books";
+        $stmt = mysqli_stmt_init($conn);
+        
+        if(!mysqli_stmt_prepare($stmt, $sql)) {
+            header("Location: ../profile.php?error=librarycounterror");
+            exit();
+        };
+        mysqli_stmt_execute($stmt);
+        echo json_encode($stmt);
+        mysqli_stmt_close($stmt);
+    };
+    countBooks($conn);
+?>
 
     <main> 
         <div class="container">

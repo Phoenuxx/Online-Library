@@ -7,7 +7,7 @@
                 <div class=col>
                     <?php 
 
-                        echo $status = (isset($_SESSION['userName'])) ? "You are logged in" : "You are logged out";
+                        echo (isset($_SESSION['userName'])) ? "You are logged in" : "You are logged out";
                         if(isset($_GET['error'])) {
                             if($_GET['error'] == 'invalidlogin') {
                                 echo "<p>Incorrect login information. Please try again</p>";

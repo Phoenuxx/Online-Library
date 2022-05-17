@@ -42,12 +42,7 @@
 						<li class="nav-item">
 							<a class="nav-link" href="library.php">Library</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Page 2</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="#">Page 3</a>
-						</li>
+						
 
 
 					</ul>
