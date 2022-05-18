@@ -1,7 +1,7 @@
 <?php 
     require_once "header.php";
     require_once 'scripts/functions.php';
-    REQUIRE_ONCE 'scripts/dbHandlerScript.php';
+    require_once 'scripts/dbHandlerScript.php';
     function countBooks($conn) {
 
         $sql = "SELECT COUNT(*) FROM books";
@@ -12,7 +12,6 @@
             exit();
         };
         mysqli_stmt_execute($stmt);
-        echo json_encode($stmt);
         mysqli_stmt_close($stmt);
     };
     countBooks($conn);

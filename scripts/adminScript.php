@@ -2,6 +2,11 @@
 require_once 'dbHandlerScript.php';
 require_once 'functions.php';
 
+if(!isset($_SESSION['userName'])) { header("Location: index.php"); }
+// else {
+//     header("Location: ../index.php");
+// }
+
 if(isset($_POST['new-book-submit'])) {
 
     $title = $_POST['title'];
@@ -21,8 +26,7 @@ if(isset($_POST['new-book-submit'])) {
 
 } elseif(isset($_POST['remove-book'])) {
     $title = $_POST['title'];
+    
     removeBook($conn, $title);
-} else {
-    header("Location: ../admin.php?test");
-    exit();
+    header("Location: ../admin.php?removebook=success");
 }

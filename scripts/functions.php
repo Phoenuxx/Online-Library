@@ -214,18 +214,17 @@ function addNewBook($conn, $title, $author, $genre, $genre2, $pages) {
 };
 
 function removeBook($conn, $title) {
-	
-	$sql = "DELETE FROM books WHERE title=?";
+	$sql = "DELETE FROM books WHERE title=? ORDER BY id LIMIT 1";
 	$stmt = mysqli_stmt_init($conn);
+	$bookReturnedSuccess = false;
 	
 	if(!mysqli_stmt_prepare($stmt, $sql)) {
 		header("Location: ../admin.php?removebook=sqlerror");
 		exit();
 	}
-		mysqli_stmt_bind_param($stmt, "s", $title);
-		mysqli_stmt_execute($stmt);
-		mysqli_stmt_close($stmt);
-		header("Location: ../admin.php?removebook=success");
+	mysqli_stmt_bind_param($stmt, "s", $title);
+	mysqli_stmt_execute($stmt);
+	mysqli_stmt_close($stmt);
 };
 
 //Library page
@@ -249,13 +248,15 @@ function populateMainLibrary($mainLibrary) {
 					</div>
 				</div>'
 				;
-		echo (isset($_SESSION['userName'])) ?  
+		echo (isset($_SESSION['userName']) && $_SESSION['userName'] !== "Admin") ?  
 			'<div class="col-3 ">
 				<form action="scripts/libraryScript.php" method="GET">
 					<button class="btn btn-success return-button" type="submit" name="checkout-book" value="'.$book_value['id'].'">Click to Checkout Book</button>
 				</form>
 			</div>' : 
-			'<button class="btn btn-success return-button" type="submit" name="checkout-book" disabled>Click to Checkout Book</button>'; 
+			'<div class="col-3 ">
+				<button class="btn btn-success return-button" type="submit" name="checkout-book" value="'.$book_value['id'].'" disabled>Click to Checkout Book</button>
+			</div>'; 
 				
 						
  	};
